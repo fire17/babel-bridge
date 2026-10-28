@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Babel Bridge</title>
+<meta name="description" content="Live Russian to English interpretation into your headset, in the browser.">
+<meta name="theme-color" content="#04061a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+
+  <header class="topbar">
+    <button id="modeBtn" class="mode" type="button" title="Change headset mode">
+      <span class="dot"></span>Headset Mode: <b id="modeLabel">Both Earpieces (Stereo)</b>
+    </button>
+    <div class="shortcut">Shortcut: Press <kbd>Space</kbd> to toggle bridge</div>
+    <button id="settingsBtn" class="iconbtn" type="button" aria-label="Settings" aria-controls="drawer" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+    </button>
+  </header>
+  <p id="modeNote" class="note" hidden></p>
+
+  <section class="hero">
+    <button id="engage" class="engage" type="button" aria-pressed="false">
+      <span class="engage-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></span>
+      <span id="engageTitle" class="engage-title">Engage Headset Bridge</span>
+      <span class="engage-sub">Russian → English Simultaneous</span>
+    </button>
+    <div class="meters" aria-hidden="true">
+      <span class="meter-label">RU MIC:</span><span class="dots" id="micDots"></span>
+      <span class="meter-label">EN EAR:</span><span class="dots" id="earDots"></span>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite">Tap the button (or press Space) to start. Your browser will ask for the microphone.</p>
+
+    <div class="lag" aria-label="Delay meter">
+      <div><span class="lag-num" id="lagNow">–</span><span class="lag-cap">delay now</span></div>
+      <div><span class="lag-num" id="lagAvg">–</span><span class="lag-cap">average</span></div>
+      <div><span class="lag-num" id="backlog">0</span><span class="lag-cap">waiting</span></div>
+    </div>
+    <p class="source-note">Source: <b>Microphone</b> (browser default mic). Want to test with a YouTube sermon? Play it on a phone held next to the mic.</p>
+  </section>
+
+  <section class="channels">
+    <article class="card" id="cardA">
+      <header class="card-head">
+        <h2><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/></svg>Channel A // Russian Influx (Mic)</h2>
+        <span class="chip" id="chipA">Idle</span>
+      </header>
+      <div class="feed" id="feedA" lang="ru"><p class="placeholder">Engage bridge to begin capturing Russian audio…</p></div>
+      <footer class="card-foot"><span>Engine: Web Speech ru-RU</span><span id="restarts">Restarts: 0</span></footer>
+    </article>
+    <article class="card card-b" id="cardB">
+      <header class="card-head">
+        <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>Channel B // English Outflux (Headset)</h2>
+        <span class="chip" id="chipB">Muted</span>
+      </header>
+      <div class="feed" id="feedB" lang="en"><p class="placeholder">English simultaneous audio will stream here…</p></div>
+      <footer class="card-foot"><span id="voiceName">Voice: loading…</span><span id="providerName">Translate: MyMemory</span></footer>
+    </article>
+  </section>
+
+  <section class="card practice">
+    <header class="practice-head">
+      <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>Acoustic Practice Phrases (Test Headset Without a Native Speaker)</h2>
+      <p><b>Simulate</b> sends the Russian text straight into the bridge (silent, no mic). <b>Play</b> speaks the Russian aloud so the mic can hear it.</p>
+    </header>
+    <div class="phrases" id="phrases"></div>
+  </section>
+
+  <footer class="foot">Babel Bridge · stage 1 · speech recognition and voices by your browser · translation by MyMemory / Google (free endpoints)</footer>
+</main>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-label="Settings" hidden>
+  <header class="drawer-head"><h2>Settings</h2><button class="iconbtn" id="closeDrawer" type="button" aria-label="Close settings">✕</button></header>
+
+  <label class="field">English voice
+    <select id="voiceSel"></select>
+  </label>
+  <button class="btn" id="testVoice" type="button">Test voice</button>
+
+  <label class="field">Speaking speed <output id="rateOut">1.00×</output>
+    <input type="range" id="rate" min="0.8" max="1.4" step="0.05" value="1">
+  </label>
+
+  <label class="toggle"><input type="checkbox" id="skipStale" checked><span><b>Catch up</b> — if more than 4 phrases are waiting, skip the oldest</span></label>
+  <label class="toggle"><input type="checkbox" id="psalms" checked><span><b>Psalm numbers</b> — convert Russian (Synodal) psalm numbers to English (21 → 22)</span></label>
+
+  <label class="field">Translation service
+    <select id="providerSel">
+      <option value="auto">MyMemory, then Google if it fails (default)</option>
+      <option value="google">Google first, then MyMemory</option>
+      <option value="mymemory">MyMemory only</option>
+    </select>
+  </label>
+  <div class="provider-status" id="providerStatus"></div>
+  <button class="btn ghost" id="clearBtn" type="button">Clear transcript</button>
+  <p class="small">Free MyMemory use is about 5,000 characters a day per connection (roughly 5–10 minutes of preaching). After that the bridge switches to Google for the rest of the session.</p>
+</aside>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

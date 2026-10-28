@@ -1,0 +1,14 @@
+{
+  "name": "Babel Bridge",
+  "short_name": "Babel Bridge",
+  "description": "Live Russian to English interpretation into your headset.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#03051a",
+  "theme_color": "#04061a",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
